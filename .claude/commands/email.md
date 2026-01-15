@@ -1,3 +1,7 @@
+---
+model: haiku
+---
+
 # Email Reply Generator
 
 Convert any rough/casual input into a polished, formal business email.
@@ -29,17 +33,13 @@ $ARGUMENTS
      - English: "Best regards" or "Thank you for your understanding."
 
 3. Output format:
-   ```
-   ---
-   [Converted email body]
-   ---
-   ```
+   - Output ONLY the converted email body (no notes, no delimiters, no explanations)
+   - ALWAYS copy the result to clipboard using Bash: `echo "..." | pbcopy`
 
 ## Examples
 
 ### Japanese (default)
 ```
----
 お世話になっております。
 
 明日の会議につきまして、資料の準備が遅れており、
@@ -47,12 +47,10 @@ $ARGUMENTS
 
 本日中には完成させ、共有させていただく予定です。
 何卒よろしくお願いいたします。
----
 ```
 
 ### English (-e)
 ```
----
 Hope you're doing well.
 
 Just wanted to let you know that the materials for
@@ -63,5 +61,4 @@ I'll make sure to have them completed and shared
 by end of day.
 
 Best regards
----
 ```

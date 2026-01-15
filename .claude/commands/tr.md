@@ -1,3 +1,7 @@
+---
+model: haiku
+---
+
 # English Translation
 
 Translate Japanese messages into natural English while preserving the original meaning.
@@ -32,15 +36,9 @@ $ARGUMENTS
    - Shorter sentences, contractions OK (e.g., "I'll", "Can you...")
    - Friendly and approachable tone
 
-3. Output format:
-   ```
-   ---
-   [English translation]
-   ---
-
-   **Notes** (only if needed)
-   - Include translation tips or alternative expressions
-   ```
+4. Output format:
+   - Output ONLY the translated text (no notes, no delimiters)
+   - ALWAYS copy the result to clipboard using Bash: `echo "translated text" | pbcopy`
 
 ## Examples
 
@@ -48,16 +46,12 @@ $ARGUMENTS
 Input: `お忙しいところ恐れ入りますが、ご確認いただけますでしょうか。`
 
 ```
----
 I understand you are busy, but I would greatly appreciate it if you could review this at your earliest convenience.
----
 ```
 
 ### Casual (-c)
 Input: `-c お忙しいところ恐れ入りますが、ご確認いただけますでしょうか。`
 
 ```
----
 Sorry to bother you, but can you take a look at this when you get a chance?
----
 ```
