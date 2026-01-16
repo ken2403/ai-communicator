@@ -9,6 +9,18 @@ $ARGUMENTS
 - `[filename]`: Design file name (without path/extension) or full path
 - `-t [template]`: Template name (default: genda)
 
+## Directory Structure
+
+```
+./slides/
+├── design/          # Markdown design files (.md)
+├── output/          # Generated PowerPoint files (.pptx)
+├── scripts/         # Python generation scripts
+│   ├── generate_pptx.py           # Base generator class
+│   └── generate_*.py              # Specific slide generators
+└── templates/       # PowerPoint templates (.pptx)
+```
+
 ## Instructions
 
 1. **Parse arguments**:
@@ -34,43 +46,61 @@ $ARGUMENTS
 
 4. **Generate pptx using Python**:
 
-   Create and run a Python script that:
-   - Uses python-pptx library
-   - Opens the template from `./slides/templates/[template].pptx`
-   - Creates slides based on the design structure
-   - Saves to `./slides/output/[same-name-as-design].pptx`
+   Use the base generator class from `./slides/scripts/generate_pptx.py` or create a new script.
+
+   Key principles:
+   - **Delete existing template slides** before adding new ones
+   - **Extract colors from template theme** (don't hardcode)
+   - **Respect template layout** (avoid right side copyright area)
 
    Run Python scripts using `uv run python`:
    ```bash
-   uv run python script.py
+   uv run python slides/scripts/generate_pptx.py design_file.md
    ```
 
-   Example Python script structure:
+   Base generator features:
    ```python
-   from pptx import Presentation
-   from pptx.util import Inches, Pt
+   from slides.scripts.generate_pptx import SlideGenerator
 
-   # Load template
-   prs = Presentation('./slides/templates/genda.pptx')
+   gen = SlideGenerator('./slides/templates/genda.pptx')
+   gen.load_template()
+   gen.delete_all_slides()  # Always delete existing slides
 
-   # Add slides based on design
-   # ... (parse markdown and create slides)
+   # Colors are loaded from template theme automatically
+   gen.colors.gold          # Primary accent
+   gen.colors.dark_navy     # Primary dark
+   gen.colors.sage_green    # Secondary accent
+   # etc.
 
-   # Save
-   prs.save('./slides/output/filename.pptx')
+   gen.add_title_slide("Title", "Subtitle")
+   gen.add_content_slide("Slide Title")
+   gen.save('./slides/output/filename.pptx')
    ```
 
 5. **Slide creation guidelines** (for genda.pptx template):
-   - Layout 0 (TITLE_AND_BODY_1): Title slide - placeholder 0=title, 1=subtitle, 2=subtitle2
-   - Layout 1 (TITLE_AND_BODY_1_1): Subtitle only
-   - Layout 2 (TITLE_AND_BODY_1_1_1): Content slide - placeholder 0=title, 1=body content
 
-   Recommended usage:
-   - First slide (title): Use Layout 0
-   - Content slides: Use Layout 2 (has title + body)
-   - Set title from `## N. Title` line
-   - Add bullet points from `- item` lines to body placeholder
-   - Keep text readable (appropriate font sizes)
+   **Template dimensions**: 20" x 11.25" (widescreen)
+
+   **Content area margins**:
+   - Left: 1.0 inch
+   - Right: 2.0 inches (to avoid © GENDA Inc. copyright area)
+   - Top: 2.8 inches (after title)
+   - Bottom: 1.0 inch
+   - Usable width: 17 inches (from 1.0" to 18.0")
+
+   **Layouts**:
+   - Layout 0 (TITLE_AND_BODY_1): Title slide
+   - Layout 1 (TITLE_AND_BODY_1_1): Subtitle only
+   - Layout 2 (TITLE_AND_BODY_1_1_1): Content slide - use for most slides
+
+   **Placeholders** (Layout 2):
+   - Type 1 (TITLE): Set slide title here
+   - Type 4 (SUBTITLE): Clear this to avoid "サブタイトルを入力" showing
+
+   **Visual elements**:
+   - Use `add_rounded_box()` for colored boxes
+   - Use `add_text_box()` for plain text
+   - Use `center_left(total_width)` to center content horizontally
 
 6. **Output**:
    - Confirm successful generation
