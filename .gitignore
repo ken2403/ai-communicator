@@ -1,0 +1,10 @@
+# Virtual environment
+.venv/
+
+# Slides - generated content (keep templates)
+slides/design/*.md
+slides/output/*.pptx
+
+# Python
+__pycache__/
+*.pyc
